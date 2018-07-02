@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchusers } from '../actions/index';
+import { fetchusers,fetchPosts } from '../actions/index';
 import _ from 'lodash';
 import UserDetails from './userdetails';
+import PostDetails from './postdetails';
 
 class Home extends Component {
 
@@ -37,6 +38,7 @@ class Home extends Component {
     userClicked(event){
         console.log("selected user",event.target.id);
         this.setState({selectedUser:this.props.users[event.target.id]});
+        this.props.fetchPosts(event.target.id);
     }
 
     render() {
@@ -45,12 +47,7 @@ class Home extends Component {
                 <div className="row m-3">
                     <div className="col-md-8">
                         <UserDetails user={this.state.selectedUser} />
-                        <div className="card border-dark m-3 float-left">
-                            <div className="card-header">User Name 1</div>
-                            <div className="card-body">
-                                <p className="card-text">Quick example for the card test 1</p>
-                            </div>
-                        </div>
+                        <PostDetails posts={this.props.posts} />
                     </div>
                     <div className="col-md-4">
                         <div className="input-group mb-3">
@@ -67,11 +64,11 @@ class Home extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ fetchusers }, dispatch);
+    return bindActionCreators({ fetchusers,fetchPosts }, dispatch);
 }
 
-function mapStateToProps({ users }) {
-    return { users }
+function mapStateToProps({ users,posts }) {
+    return { users,posts }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
