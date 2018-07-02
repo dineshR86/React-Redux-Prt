@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchusers } from '../actions/index';
 import _ from 'lodash';
+import UserDetails from './userdetails';
 
 class Home extends Component {
 
@@ -14,6 +15,7 @@ class Home extends Component {
         }
 
         this.renderUsers = this.renderUsers.bind(this);
+        this.userClicked=this.userClicked.bind(this);
     }
 
     componentDidMount() {
@@ -22,17 +24,19 @@ class Home extends Component {
     }
 
     renderUsers() {
+        
         return _.map(this.props.users, user => {
             return (
-                <li className="list-group-item" key={user.id} onSelect={this.userClicked(user.id)}>
+                <li className="list-group-item" key={user.id} onClick={this.userClicked} id={user.id}>
                     {user.name}
                 </li>
             );
         });
     }
 
-    userClicked(id){
-        console.log("selected user",id);
+    userClicked(event){
+        console.log("selected user",event.target.id);
+        this.setState({selectedUser:this.props.users[event.target.id]});
     }
 
     render() {
@@ -40,13 +44,8 @@ class Home extends Component {
             <div className="container main border">
                 <div className="row m-3">
                     <div className="col-md-8">
-                        <div className="card border-dark mr-3 float-left">
-                            <div className="card-header">User Name</div>
-                            <div className="card-body">
-                                <p className="card-text">Quick example for the card test</p>
-                            </div>
-                        </div>
-                        <div className="card border-dark mb-3 float-left">
+                        <UserDetails user={this.state.selectedUser} />
+                        <div className="card border-dark m-3 float-left">
                             <div className="card-header">User Name 1</div>
                             <div className="card-body">
                                 <p className="card-text">Quick example for the card test 1</p>
